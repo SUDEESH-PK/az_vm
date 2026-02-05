@@ -7,7 +7,7 @@ on:
 
 jobs:
   create-vm:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -16,18 +16,15 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Terraform Init
+        run: terraform init
 
+      - name:  terraform Plan
+        run:  terraform plan
 
-      - name: Create Azure VM
-        uses: azure/cli@v1
-        with:
-          inlineScript: |
-            az vm create \
-              --resource-group myResourceGroup \
-              --name myVM \
-              --image Ubuntu2204 \
-              --admin-username azureuser \
-              --generate-ssh-keys
+      - name:  terraform apply
+        run:  terraform apply
+        
       
       - name: Logout from Azure
         run: |
